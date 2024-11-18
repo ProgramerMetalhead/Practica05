@@ -1,6 +1,7 @@
 <?
 
 // Cryptic writtings rolon
+echo encrypt_password("Coco_2003");
 function encrypt_password($password){
 
     $tamañoBytes = 32;

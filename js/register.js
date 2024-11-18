@@ -18,12 +18,12 @@ formsumbmit.addEventListener('submit', async (e) => {
 
 
     // Se valida los campos del usuario
-    if (name == ""){
+    if (!name){
         alert("se requiere nombre");
         return;
     }
     
-    if (lastname == ""){
+    if (!lastname){
         alert("se requiere apellido");
         return;
     }
@@ -32,18 +32,19 @@ formsumbmit.addEventListener('submit', async (e) => {
         alert("se requiere apellido");
     }
 
-    if (birthday == ""){
+    if (!birthday){
         alert("se requiere una fecha de nacimiento");
         return;
     }
 
-    if (user == "" || !/^[a-zA-Z0-9_]+$/.test(user)){
+    if (!user|| !/^[a-zA-Z0-9_]+$/.test(user)){
         alert("usuario no valido");
         return;
     }
 
     if (password != confirm_passwd){
         alert("las constraseñas no coinciden");
+        return;
     }
 
     if (!/^(?=.*[A-Z])[a-zA-Z0-9_]{8,}$/.test(password)){
@@ -68,12 +69,14 @@ formsumbmit.addEventListener('submit', async (e) => {
     // el archivo y otro dato.
     try{
 
+        console.log(`${APP_ROOT}do_register.php`)
+
         const res = await fetch(    // AJAX call
-                `${APP_ROOT}do_register.php`, 
+                `${APP_ROOT}do_register_ajax.php`, 
                 { method: "POST", body: datos });
 
         // Obtenemos un JS object a partir del JSON regresado por el server
-        const resObj = await res.json();  
+        const resObj = await res.json();
         
         if (resObj.error) {   // si regresa un error, lo mostramos
             alert(resObj.error);

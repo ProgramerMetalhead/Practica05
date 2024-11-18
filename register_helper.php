@@ -21,7 +21,7 @@ function db_insert_user($user, $passwordEncrypt, $passwordSalt,$name, $lastname,
 
     if ($queryResult[0]["username"] == $user) {
         return [
-            "message"=> "Usuario ya existente",
+            "message"=> "El nombre de usuario ya esta en uso",
             "error"=> 1,
         ];
     }

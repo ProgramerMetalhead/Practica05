@@ -3,16 +3,18 @@
 require "config.php";
 require APP_PATH . "data_access/db.php";
 require APP_PATH . "register_helper.php";
+require APP_PATH . "generate_password.php";
 
 $user = filter_input(INPUT_POST, "user");
 $name = filter_input(INPUT_POST,"name");
 $lastname = filter_input(INPUT_POST,"lastname");
 $gender = filter_input(INPUT_POST,"gender");
 $birthday = filter_input(INPUT_POST,"birthday");
-$password = filter_input(INPUT_POST, var_name: "password-encrypt");
+$password = filter_input(INPUT_POST, var_name: "password");
 
 if (!$user || !$name || !$lastname || !$gender || !$birthday || !$password) {
     echo json_encode(['message' => 'los campos no son validados', 'error' => 'not validate values']);
+    exit;
 }
 
 $passwordSumary = encrypt_password($password);
@@ -24,6 +26,12 @@ $register = db_insert_user($name,$passwordEncrypt, $passwordSalt,
 $name, lastname: $lastname, gender: $gender, birthday: $birthday, reg_hour: $reg_hour);
 
 if ($register['error'] != 0){
-    echo json_encode($register);
+    echo json_encode(value: $register);
+    exit;
 }
+
+echo json_encode([
+    'message' => 'El registro se ha completado'
+]);
+exit();
 
