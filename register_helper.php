@@ -21,8 +21,7 @@ function db_insert_user($user, $passwordEncrypt, $passwordSalt,$name, $lastname,
 
     if ($queryResult[0]["username"] == $user) {
         return [
-            "message"=> "El nombre de usuario ya esta en uso",
-            "error"=> 1,
+            "ErrMess"=> "El nombre de usuario ya esta en uso",
         ];
     }
 
@@ -36,13 +35,11 @@ function db_insert_user($user, $passwordEncrypt, $passwordSalt,$name, $lastname,
     
     if ($stmt->execute( $sqlParams) == True){
         return [
-            "message" => "El usuario se ha registrado",
-            "error" => 0
+            "Message" => "El usuario se ha registrado",
         ];
     }else {
         return [
-            "message" => "La consulta ha fallado!",
-            "error" => 1
+            "ErrMess" => "La consulta ha fallado!",
         ];
     }
 }

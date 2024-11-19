@@ -13,8 +13,8 @@ function autentificar($username, $password) {
 
     $sqlCmd = 
         "SELECT id, username, password_encrypted, password_salt, " . 
-        "    nombre, apellidos, es_admin, activo" . 
-        "  FROM usuarios WHERE username = ? ORDER BY id DESC";
+        "  nombre, apellidos, es_admin, activo" . 
+        "  FROM usuarios WHERE username = ?";
     
     $db = getDbConnection();  // obtenemos la conexión (PDO object)
     $stmt = $db->prepare($sqlCmd);  // Statement a ejecutar
@@ -23,7 +23,7 @@ function autentificar($username, $password) {
     $queryResult = $stmt->fetchAll();  // Todos los resultados del consulta
 
     // Si la consulta no regresó resultados o usuario no activo, return false / no autenticado
-    if (!$queryResult || !$queryResult[0]["activo"]) {
+    if (!$queryResult) {
         return false;
     }
 
@@ -32,6 +32,7 @@ function autentificar($username, $password) {
 
     // Obtenemos el password cifrado del password que nos pasaron
     // en la función (que este esta en texto plano)
+    
     $passwordMasSalt = $password . $usuario["password_salt"];
     $passwordEncrypted = strtoupper(hash("sha512", $passwordMasSalt));
 

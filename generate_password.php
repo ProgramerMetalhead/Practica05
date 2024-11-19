@@ -1,7 +1,6 @@
-<?
+<?php
 
 // Cryptic writtings rolon
-echo encrypt_password("Coco_2003");
 function encrypt_password($password){
 
     $tamañoBytes = 32;
@@ -13,7 +12,7 @@ function encrypt_password($password){
 
     return [
         'passwordEncrypted' => $passwordEncrypted,
-        'passwordMasSalt' => $passwordMasSalt
+        'passwordSalt' => $salt
     ];
     
 }

@@ -13,9 +13,9 @@ formsumbmit.addEventListener('submit', async (e) => {
     const lastname = document.getElementById("txt-lastname").value.trim();
     const gender = document.getElementById("tag-gender").value;
     const birthday = document.getElementById("date-birthday").value;
+    let rol = parseInt(document.getElementById("select-rol").value);
     const password = document.getElementById("txt-password").value;
     const confirm_passwd = document.getElementById("txt-confirmPassword").value;
-
 
     // Se valida los campos del usuario
     if (!name){
@@ -42,6 +42,10 @@ formsumbmit.addEventListener('submit', async (e) => {
         return;
     }
 
+    if (!rol){
+        rol = 1;
+    }
+
     if (password != confirm_passwd){
         alert("las constraseñas no coinciden");
         return;
@@ -61,6 +65,7 @@ formsumbmit.addEventListener('submit', async (e) => {
     datos.append('gender', gender);
     datos.append('birthday', birthday);
     datos.append('user', user);
+    datos.append('rol', rol);
     datos.append('password', password);
 
     // Se hace la petición AJAX usando la API de fetch, esta
@@ -78,13 +83,11 @@ formsumbmit.addEventListener('submit', async (e) => {
         // Obtenemos un JS object a partir del JSON regresado por el server
         const resObj = await res.json();
         
-        if (resObj.error) {   // si regresa un error, lo mostramos
-            alert(resObj.error);
+        if (resObj.ErrMess) {   // si regresa un error, lo mostramos
+            alert(resObj.errMessage);
         }
-        if (resObj.mensaje) {  // mensaje
-            inputArchivo.value = "";  // para limpiar el input file
-            txtOtroDato.value = "";  // para limpiar el input text
-            alert(resObj.mensaje);
+        if (resObj.Message) {  // mensaje
+            alert(resObj.Message);
         }
     }
     catch(error){

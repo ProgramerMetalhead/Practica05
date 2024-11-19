@@ -50,6 +50,13 @@
                             <td><input type="date" id="date-birthday" name="birthday"></td>
                         </tr>
                         <tr>
+                            <td><label for="select-rol">Selecciona el rol:</label></td>
+                            <td><select name="rol" id="select-rol" require>
+                                <option value="0">Administrador</option>
+                                <option value="1">Usuario</option>
+                                </select></td>
+                        </tr>
+                        <tr>
                             <td><label for="txt-password">Password:</label></td>
                             <td><input type="password" name="password" id="txt-password" required />
                         </tr>
