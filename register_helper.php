@@ -19,11 +19,12 @@ function db_insert_user($user, $passwordEncrypt, $passwordSalt,$name, $lastname,
     $stmt->execute($sqlParams);
     $queryResult = $stmt->fetchAll();
 
-    if ($queryResult[0]["username"] == $user) {
-        return [
-            "ErrMess"=> "El nombre de usuario ya esta en uso",
-        ];
-    }
+    if (!empty($queryResult) && $queryResult[0]["username"] == $user) {
+        echo json_encode([
+            "ErrMesg" => "El nombre de usuario ya está en uso"
+        ]);
+        exit();
+    }    
 
     $sqlCmd =
         "INSERT INTO usuarios(username, password_encrypted, password_salt, nombre, apellidos, genero, fecha_nacimiento, 
@@ -34,12 +35,13 @@ function db_insert_user($user, $passwordEncrypt, $passwordSalt,$name, $lastname,
     $sqlParams = [$user,$passwordEncrypt, $passwordSalt,$name, $lastname, $gender, $birthday, $reg_hour, $isAdmin];  // Parámetros de la consulta
     
     if ($stmt->execute( $sqlParams) == True){
-        return [
-            "Message" => "El usuario se ha registrado",
-        ];
+        echo json_encode([
+            "success" => "El usuario se ha registrado"
+        ]);
     }else {
-        return [
-            "ErrMess" => "La consulta ha fallado!",
-        ];
+        echo json_encode([
+            "ErrMesg" => "La consulta ha fallado!"
+        ]);
     }
+    exit();
 }

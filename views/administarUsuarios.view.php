@@ -41,6 +41,31 @@
             </div>
         </div>  <!-- End left column -->
     </div>  <!-- End row-->
+
+    <!--modal-->
+    <div id="adminModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+        <div style="background: #fff; padding: 20px; border-radius: 5px; width: 300px;">
+            <h2>Administrar Usuario</h2>
+            <form id="adminForm">
+                <input type="hidden" id="modalUserId" />
+                <div>
+                    <label for="modalPassword">Nuevo Password:</label>
+                    <input type="password" id="modalPassword" placeholder="Ingrese nuevo password" />
+                </div>
+                <div>
+                    <label for="modalRole">Nuevo Rol:</label>
+                    <select id="modalRole">
+                        <option value="0">Usuario</option>
+                        <option value="1">Admin</option>
+                    </select>
+                </div>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+            <button id="closeModal">Cerrar</button>
+        </div>
+    </div>
+
+
     <script src="<?=APP_ROOT?>js\adminstarUsuarios.js"></script>
 </body>
 </html>

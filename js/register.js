@@ -43,7 +43,7 @@ formsumbmit.addEventListener('submit', async (e) => {
     }
 
     if (!rol){
-        rol = 1;
+        rol = 0;
     }
 
     if (password != confirm_passwd){
@@ -83,11 +83,13 @@ formsumbmit.addEventListener('submit', async (e) => {
         // Obtenemos un JS object a partir del JSON regresado por el server
         const resObj = await res.json();
         
-        if (resObj.ErrMess) {   // si regresa un error, lo mostramos
-            alert(resObj.errMessage);
+        if (resObj.ErrMesg) {   // si regresa un error, lo mostramos
+            alert(resObj.ErrMesg);
         }
-        if (resObj.Message) {  // mensaje
+        if (resObj.success) {  // mensaje
             alert("El usuario se ha reguistrado correctamente");
+            window.location.href = `${APP_ROOT}index.php`;
+
         }
     }
     catch(error){

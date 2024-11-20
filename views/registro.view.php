@@ -52,8 +52,8 @@
                         <tr>
                             <td><label for="select-rol">Selecciona el rol:</label></td>
                             <td><select name="rol" id="select-rol" require>
-                                <option value="0">Administrador</option>
-                                <option value="1">Usuario</option>
+                                <option value="1">Administrador</option>
+                                <option value="0">Usuario</option>
                                 </select></td>
                         </tr>
                         <tr>

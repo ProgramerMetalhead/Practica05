@@ -3,15 +3,13 @@ const users = null;
 var usersInfo;
 
 // Función auto contenida async
+// Función auto contenida async
 (async () => {
     try {
         const res = await fetch(`${APP_ROOT}do_admistarUsuarios.php`);
-        // Del response obtenemos el JSON como JS object
         const resObj = await res.json();
 
-        // Establecemos en el HTML element el dato de la fechaHora obtenida.
         if (resObj.ErrMesg) {
-            // En caso de recibir un error lo imprimimos
             alert("Hubo un error: ", resObj.ErrMesg);
         } else {
             resObj.forEach(user => {
@@ -25,16 +23,12 @@ var usersInfo;
                         <td>${user.birthday}</td>
                         <td>${user.is_admin == 1 ? 'Admin' : 'Usuario'}</td>
                         <td>${user.is_active == 1 ? 'Activo' : 'No Activo'}</td>
-                        <td><button class="btn-admin" data-id="${user.id}">Administrar</button></td>
+                        <td><button class="btn-admin" data-id="${user.id}" data-role="${user.is_admin}">Administrar</button></td>
                         <td><button class="btn-eliminar" data-id="${user.id}">Eliminar</button></td>
                     </tr>`;
-                // Utiliza insertAdjacentHTML para insertar una cadena HTML
                 userGrid.insertAdjacentHTML('beforeend', info);
             });
 
-            usersInfo = document.getElementsByClassName("user-info");
-
-            // Agregar manejadores de eventos a los botones
             document.querySelectorAll(".btn-admin").forEach(button => {
                 button.addEventListener("click", handleAdmin);
             });
@@ -49,31 +43,77 @@ var usersInfo;
     }
 })();
 
-// Función para manejar el botón de Administrar
+// Función para abrir el modal
 function handleAdmin(event) {
     const userId = event.target.getAttribute("data-id");
-    alert(`Administrar usuario con ID: ${userId}`);
-    // Aquí puedes redirigir a otra página o mostrar un formulario/modal
+    const userRole = event.target.getAttribute("data-role");
+
+    document.getElementById("modalUserId").value = userId;
+    document.getElementById("modalRole").value = userRole;
+
+    document.getElementById("adminModal").style.display = "flex";
 }
+
+// Cerrar el modal
+document.getElementById("closeModal").addEventListener("click", () => {
+    document.getElementById("adminModal").style.display = "none";
+});
+
+// Enviar cambios
+document.getElementById("adminForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const userId = document.getElementById("modalUserId").value;
+    const newPassword = document.getElementById("modalPassword").value;
+    const newRole = document.getElementById("modalRole").value;
+
+    try {
+        const response = await fetch(`${APP_ROOT}Controllers/actualizarUsuario.php`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: userId,
+                password: newPassword,
+                role: newRole,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert("Usuario actualizado correctamente");
+            // Actualizar la tabla
+            const row = document.getElementById(`user-${userId}`);
+            row.cells[6].textContent = newRole == 1 ? "Admin" : "Usuario";
+
+            document.getElementById("adminModal").style.display = "none";
+        } else {
+            alert("Error al actualizar usuario: " + data.ErrMesg);
+        }
+    } catch (error) {
+        console.error("Error al actualizar usuario:", error);
+        alert("Hubo un error al intentar actualizar el usuario.");
+    }
+});
 
 // Función para manejar el botón de Eliminar
 function handleEliminar(event) {
     const userId = event.target.getAttribute("data-id");
     if (confirm(`¿Estás seguro de que deseas eliminar al usuario con ID: ${userId}?`)) {
-        // Aquí puedes realizar una solicitud para eliminar el usuario
-        fetch(`${APP_ROOT}Controller/eliminarUsuario.php?id=${userId}`, {
+        fetch(`${APP_ROOT}Controllers/eliminarUsuario.php?id=${userId}`, {
             method: "POST"
         }).then(response => response.json())
         .then(data => {
             if (data.success) {
                 alert("Usuario eliminado con éxito");
-                // Eliminar la fila del usuario del DOM
                 const userRow = document.getElementById(`user-${userId}`);
                 if (userRow) {
                     userRow.remove();
                 }
             } else {
-                alert("Error al eliminar usuario: " + data.message);
+                alert("Error al eliminar usuario: " + data.ErrMesg);
             }
         }).catch(error => {
             console.error("Error al eliminar usuario:", error);
