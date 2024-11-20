@@ -87,7 +87,7 @@ formsumbmit.addEventListener('submit', async (e) => {
             alert(resObj.errMessage);
         }
         if (resObj.Message) {  // mensaje
-            alert(resObj.Message);
+            alert("El usuario se ha reguistrado correctamente");
         }
     }
     catch(error){

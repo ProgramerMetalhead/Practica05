@@ -32,7 +32,7 @@ if ($register['ErrMess']){
 }
 
 echo json_encode([
-    'message' => 'El registro se ha completado'
+    'success' => true
 ]);
 exit();
 
