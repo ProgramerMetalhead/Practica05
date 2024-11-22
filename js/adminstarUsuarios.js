@@ -3,7 +3,6 @@ const users = null;
 var usersInfo;
 
 // Función auto contenida async
-// Función auto contenida async
 (async () => {
     try {
         const res = await fetch(`${APP_ROOT}do_admistarUsuarios.php`);
@@ -45,13 +44,16 @@ var usersInfo;
 
 // Función para abrir el modal
 function handleAdmin(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado
+    event.stopPropagation(); // Evitar conflictos con otros eventos
+
     const userId = event.target.getAttribute("data-id");
     const userRole = event.target.getAttribute("data-role");
 
     document.getElementById("modalUserId").value = userId;
     document.getElementById("modalRole").value = userRole;
 
-    document.getElementById("adminModal").style.display = "flex";
+    document.getElementById("adminModal").style.display = "flex";
 }
 
 // Cerrar el modal
@@ -61,23 +63,17 @@ document.getElementById("closeModal").addEventListener("click", () => {
 
 // Enviar cambios
 document.getElementById("adminForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Detener la recarga del formulario
 
-    const userId = document.getElementById("modalUserId").value;
-    const newPassword = document.getElementById("modalPassword").value;
-    const newRole = document.getElementById("modalRole").value;
+    const formData = new FormData();
+    formData.append("id", document.getElementById("modalUserId").value);
+    formData.append("password", document.getElementById("modalPassword").value);
+    formData.append("role", document.getElementById("modalRole").value);
 
     try {
-        const response = await fetch(`${APP_ROOT}Controllers/actualizarUsuario.php`, {
+        const response = await fetch(`${APP_ROOT}Controllers/administarUsuario.php`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                id: userId,
-                password: newPassword,
-                role: newRole,
-            }),
+            body: formData,
         });
 
         const data = await response.json();
@@ -85,12 +81,12 @@ document.getElementById("adminForm").addEventListener("submit", async (event) =>
         if (data.success) {
             alert("Usuario actualizado correctamente");
             // Actualizar la tabla
-            const row = document.getElementById(`user-${userId}`);
-            row.cells[6].textContent = newRole == 1 ? "Admin" : "Usuario";
+            const row = document.getElementById(`user-${formData.get("id")}`);
+            row.cells[6].textContent = formData.get("role") == 1 ? "Admin" : "Usuario";
 
             document.getElementById("adminModal").style.display = "none";
         } else {
-            alert("Error al actualizar usuario: " + data.ErrMesg);
+            alert("Error al actualizar usuario: " + data.message);
         }
     } catch (error) {
         console.error("Error al actualizar usuario:", error);
@@ -113,7 +109,7 @@ function handleEliminar(event) {
                     userRow.remove();
                 }
             } else {
-                alert("Error al eliminar usuario: " + data.ErrMesg);
+                alert("Error al eliminar usuario: " + data.message);
             }
         }).catch(error => {
             console.error("Error al eliminar usuario:", error);
@@ -121,3 +117,4 @@ function handleEliminar(event) {
         });
     }
 }
+
